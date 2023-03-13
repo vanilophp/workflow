@@ -14,11 +14,11 @@ Transitions can be defined from one state to another.
 
 class OrderWorkflow extends Workflow
 {
-    private static string $enumClass = OrderStatus::class; 
+    private static string $enumClass = OrderStatus::class;
+    private static string $property = 'status';
 
     private static array $graph = [
         'name' => 'Order Workflow',
-        'property' => 'status'
         'transitions' => [
             'prepare' => [
                 'from' => [OrderStatus::NEW, OrderStatus::PENDING],
@@ -63,10 +63,10 @@ But it's also possible to explicitly define methods that will be called instead.
 ```php
 class OrderWorkflow extends Workflow
 {
-    private static string $enumClass = OrderStatus::class; 
+    private static string $enumClass = OrderStatus::class;
+    private static string $property = 'status';
 
     private static array $graph = [
-        'property' => 'status'
         'transitions' => [
             'cancel' => [
                 'from' => ['*'],
