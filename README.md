@@ -12,7 +12,7 @@ Transitions can be defined from one state to another.
 
 ```php
 
-class OrderWorkflow extends Workflow
+class OrderWorkflow extends \Vanilo\Workflow\Draft
 {
     private static string $enumClass = OrderStatus::class;
     private static string $property = 'status';
@@ -61,7 +61,7 @@ By default, executing transitions will mutate the subject's state to the desired
 But it's also possible to explicitly define methods that will be called instead.
 
 ```php
-class OrderWorkflow extends Workflow
+class OrderWorkflow extends \Vanilo\Workflow\Draft
 {
     private static string $enumClass = OrderStatus::class;
     private static string $property = 'status';

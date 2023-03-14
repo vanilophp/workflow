@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Contains the Workflow class.
+ * Contains the Draft class.
  *
  * @copyright   Copyright (c) 2023 Vanilo UG
  * @author      Attila Fulop
@@ -17,31 +17,33 @@ namespace Vanilo\Workflow;
 use BackedEnum;
 use InvalidArgumentException;
 use Konekt\Enum\Enum;
+use Vanilo\Workflow\Contracts\Workflow;
 use Vanilo\Workflow\Exceptions\TransitionNotAllowedException;
 
-class Workflow
+class Draft implements Workflow
 {
     protected static string $enumClass;
+
     protected static string $property;
 
     protected static array $graph;
 
     protected object $subject;
 
-    public static function createOnTheFly(object $subject, string $property, array $graph): Workflow
+    public static function forgeOnTheFly(object $subject, string $property, array $graph): Draft
     {
         $prop = $subject->{$property};
         if (!is_object($prop) || ( !($prop instanceof BackedEnum) && !($prop instanceof Enum))) {
             throw new InvalidArgumentException("The `$property` property of the " . get_class($subject) . ' class is not an Enum');
         }
 
-        $instance = self::createForEnumClass(get_class($prop), $property, $graph);
+        $instance = self::fabricateForEnumClass(get_class($prop), $property, $graph);
         $instance->subject = $subject;
 
         return $instance;
     }
 
-    public static function createForEnumClass(string $enumClass, string $property, array $graph): Workflow
+    public static function fabricateForEnumClass(string $enumClass, string $property, array $graph): Draft
     {
         $instance = new static();
         $instance::$enumClass = $enumClass;
@@ -59,6 +61,11 @@ class Workflow
     public static function hasTransition(string $transition): bool
     {
         return isset(static::$graph['transitions'][$transition]);
+    }
+
+    public static function for(object $subject): static
+    {
+        return (new static())->usingSubject($subject);
     }
 
     public function getState(): BackedEnum|Enum
@@ -82,7 +89,11 @@ class Workflow
     {
         $this->throwExceptionIfCannot($transition);
 
-        $this->subject->{static::$property} = $this->forceEnum(static::$graph['transitions'][$transition]['to']);
+        if (method_exists($this, $transition)) {
+            $this->{$transition}();
+        } else {
+            $this->subject->{static::$property} = $this->forceEnum(static::$graph['transitions'][$transition]['to']);
+        }
     }
 
     public function can(string $transition): bool

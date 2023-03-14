@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Contains the GraphOnTheFlyTest class.
+ * Contains the OnTheFlyTest class.
  *
  * @copyright   Copyright (c) 2023 Vanilo UG
  * @author      Attila Fulop
@@ -19,34 +19,34 @@ use Vanilo\Workflow\Tests\Examples\SampleHoliday;
 use Vanilo\Workflow\Tests\Examples\SampleHolidayStatus;
 use Vanilo\Workflow\Tests\Examples\SampleNativeHoliday;
 use Vanilo\Workflow\Tests\Examples\SampleNativeHolidayStatus;
-use Vanilo\Workflow\Workflow;
+use Vanilo\Workflow\Draft;
 
-class GraphOnTheFlyTest extends TestCase
+class OnTheFlyTest extends TestCase
 {
     /** @test */
     public function it_can_be_created_from_an_object_using_its_property()
     {
         $holiday = new SampleHoliday();
-        $workflow = Workflow::createOnTheFly($holiday, 'status', []);
+        $workflow = Draft::forgeOnTheFly($holiday, 'status', []);
 
-        $this->assertInstanceOf(Workflow::class, $workflow);
+        $this->assertInstanceOf(Draft::class, $workflow);
         $this->assertEquals(SampleHolidayStatus::class, $workflow->getCoveredEnumClass());
     }
 
     /** @test */
     public function it_can_be_created_from_an_enum_class_and_a_property()
     {
-        $workflow = Workflow::createForEnumClass(SampleHolidayStatus::class, 'status', [])
+        $workflow = Draft::fabricateForEnumClass(SampleHolidayStatus::class, 'status', [])
             ->usingSubject(new SampleHoliday());
 
-        $this->assertInstanceOf(Workflow::class, $workflow);
+        $this->assertInstanceOf(Draft::class, $workflow);
         $this->assertEquals(SampleHolidayStatus::class, $workflow->getCoveredEnumClass());
     }
 
     /** @test */
     public function it_can_tell_the_allowed_transitions()
     {
-        $workflow = Workflow::createOnTheFly(new SampleHoliday(), 'status',
+        $workflow = Draft::forgeOnTheFly(new SampleHoliday(), 'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -65,7 +65,7 @@ class GraphOnTheFlyTest extends TestCase
     public function transitions_can_be_executed()
     {
         $holiday = new SampleHoliday();
-        $workflow = Workflow::createOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly($holiday, 'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -91,7 +91,7 @@ class GraphOnTheFlyTest extends TestCase
     public function it_works_with_native_php_enums()
     {
         $holiday = new SampleNativeHoliday();
-        $workflow = Workflow::createOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly($holiday, 'status',
             [
                 'transitions' => [
                     'approve' => [

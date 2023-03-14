@@ -21,4 +21,6 @@ class SampleHolidayStatus extends Enum
     public const REQUESTED = 'requested';
     public const APPROVED = 'approved';
     public const SPENT = 'spent';
+
+    public const CANCELED = 'canceled';
 }
