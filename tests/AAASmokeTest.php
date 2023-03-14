@@ -38,6 +38,4 @@ class AAASmokeTest extends TestCase
             . PHP_VERSION . ' found.'
         );
     }
-
-
 }

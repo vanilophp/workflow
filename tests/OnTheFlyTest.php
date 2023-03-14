@@ -15,11 +15,11 @@ declare(strict_types=1);
 namespace Vanilo\Workflow\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Vanilo\Workflow\Draft;
 use Vanilo\Workflow\Tests\Examples\SampleHoliday;
 use Vanilo\Workflow\Tests\Examples\SampleHolidayStatus;
 use Vanilo\Workflow\Tests\Examples\SampleNativeHoliday;
 use Vanilo\Workflow\Tests\Examples\SampleNativeHolidayStatus;
-use Vanilo\Workflow\Draft;
 
 class OnTheFlyTest extends TestCase
 {
@@ -46,7 +46,9 @@ class OnTheFlyTest extends TestCase
     /** @test */
     public function it_can_tell_the_allowed_transitions()
     {
-        $workflow = Draft::forgeOnTheFly(new SampleHoliday(), 'status',
+        $workflow = Draft::forgeOnTheFly(
+            new SampleHoliday(),
+            'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -65,7 +67,9 @@ class OnTheFlyTest extends TestCase
     public function transitions_can_be_executed()
     {
         $holiday = new SampleHoliday();
-        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly(
+            $holiday,
+            'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -91,7 +95,9 @@ class OnTheFlyTest extends TestCase
     public function it_works_with_native_php_enums()
     {
         $holiday = new SampleNativeHoliday();
-        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly(
+            $holiday,
+            'status',
             [
                 'transitions' => [
                     'approve' => [

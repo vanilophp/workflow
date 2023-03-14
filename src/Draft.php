@@ -33,7 +33,7 @@ class Draft implements Workflow
     public static function forgeOnTheFly(object $subject, string $property, array $graph): Draft
     {
         $prop = $subject->{$property};
-        if (!is_object($prop) || ( !($prop instanceof BackedEnum) && !($prop instanceof Enum))) {
+        if (!is_object($prop) || (!($prop instanceof BackedEnum) && !($prop instanceof Enum))) {
             throw new InvalidArgumentException("The `$property` property of the " . get_class($subject) . ' class is not an Enum');
         }
 
@@ -132,7 +132,7 @@ class Draft implements Workflow
         }
 
         $class = static::$enumClass;
-        return match($this->isKonektEnum()) {
+        return match ($this->isKonektEnum()) {
             true => $class::create($value),
             default => $class::from($value),
         };
