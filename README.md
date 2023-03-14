@@ -1,5 +1,12 @@
 # A Simple PHP Workflow Engine (State Machine)
 
+[![Tests](https://img.shields.io/github/actions/workflow/status/vanilophp/workflow/tests.yml?branch=master&style=flat-square)](https://github.com/vanilophp/workflow/actions?query=workflow%3Atests)
+[![Packagist Stable Version](https://img.shields.io/packagist/v/vanilo/workflow.svg?style=flat-square&label=stable)](https://packagist.org/packages/vanilo/workflow)
+[![StyleCI](https://styleci.io/repos/613483554/shield?branch=master)](https://styleci.io/repos/613483554)
+[![Packagist downloads](https://img.shields.io/packagist/dt/vanilo/workflow.svg?style=flat-square)](https://packagist.org/packages/vanilo/workflow)
+[![MIT Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE.md)
+
+
 This is a PHP engine that can take a subject (entity, document, db record) that
 has an enum property (either a native PHP enum or [Konekt Enum](https://konekt.dev/enum))
 that represents the state of the subject.
