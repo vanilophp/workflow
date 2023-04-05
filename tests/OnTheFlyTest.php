@@ -123,7 +123,9 @@ class OnTheFlyTest extends TestCase
     public function a_save_callback_can_be_passed()
     {
         $holiday = new SampleHoliday();
-        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly(
+            $holiday,
+            'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -131,8 +133,9 @@ class OnTheFlyTest extends TestCase
                         'to' => SampleHolidayStatus::APPROVED,
                     ]
                 ],
-            ],)
-            ->callToSaveSubjectAfterTransition(fn(SampleHoliday $holiday) => $holiday->saved = true);
+            ],
+        )
+            ->callToSaveSubjectAfterTransition(fn (SampleHoliday $holiday) => $holiday->saved = true);
 
         $this->assertFalse($holiday->saved);
         $workflow->execute('approve');
@@ -144,7 +147,9 @@ class OnTheFlyTest extends TestCase
     public function parameters_are_passed_to_the_save_callback()
     {
         $holiday = new SampleHoliday();
-        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+        $workflow = Draft::forgeOnTheFly(
+            $holiday,
+            'status',
             [
                 'transitions' => [
                     'approve' => [
@@ -152,7 +157,8 @@ class OnTheFlyTest extends TestCase
                         'to' => SampleHolidayStatus::APPROVED,
                     ]
                 ],
-            ],)
+            ],
+        )
             ->callToSaveSubjectAfterTransition(function (SampleHoliday $holiday, array $parameters) {
                 $holiday->saved = true;
                 $holiday->misc = $parameters['data'];
