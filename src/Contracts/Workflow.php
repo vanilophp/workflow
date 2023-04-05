@@ -29,7 +29,7 @@ interface Workflow
 
     public function allowedTransitions(): array;
 
-    public function execute(string $transition): void;
+    public function execute(string $transition, array $parameters = []): void;
 
     public function can(string $transition): bool;
 

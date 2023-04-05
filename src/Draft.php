@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Vanilo\Workflow;
 
 use BackedEnum;
+use Closure;
 use InvalidArgumentException;
 use Konekt\Enum\Enum;
 use Vanilo\Workflow\Contracts\Workflow;
@@ -29,6 +30,8 @@ class Draft implements Workflow
     protected static array $graph;
 
     protected object $subject;
+
+    protected ?Closure $saveSubjectHook = null;
 
     public static function forgeOnTheFly(object $subject, string $property, array $graph): Draft
     {
@@ -85,14 +88,15 @@ class Draft implements Workflow
         return $result;
     }
 
-    public function execute(string $transition): void
+    public function execute(string $transition, array $parameters = []): void
     {
         $this->throwExceptionIfCannot($transition);
 
         if (method_exists($this, $transition)) {
-            $this->{$transition}();
+            $this->{$transition}($parameters);
         } else {
             $this->subject->{static::$property} = $this->forceEnum(static::$graph['transitions'][$transition]['to']);
+            $this->saveSubject($parameters);
         }
     }
 
@@ -115,9 +119,23 @@ class Draft implements Workflow
         return $this;
     }
 
+    public function callToSaveSubjectAfterTransition(Closure $callback): static
+    {
+        $this->saveSubjectHook = $callback;
+
+        return $this;
+    }
+
     public function getCoveredEnumClass(): string
     {
         return static::$enumClass;
+    }
+
+    protected function saveSubject(array $parameters): void
+    {
+        if (null !== $this->saveSubjectHook) {
+            call_user_func($this->saveSubjectHook, $this->subject, $parameters);
+        }
     }
 
     protected function currentStateAsScalar(): string|int

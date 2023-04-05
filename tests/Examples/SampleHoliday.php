@@ -18,6 +18,10 @@ class SampleHoliday
 {
     public SampleHolidayStatus $status;
 
+    public bool $saved = false;
+
+    public mixed $misc = null;
+
     public function __construct()
     {
         $this->status = SampleHolidayStatus::REQUESTED();

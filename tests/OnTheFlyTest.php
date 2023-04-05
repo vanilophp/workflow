@@ -118,4 +118,50 @@ class OnTheFlyTest extends TestCase
         $workflow->execute('spend');
         $this->assertEquals(SampleNativeHolidayStatus::SPENT, $holiday->status);
     }
+
+    /** @test */
+    public function a_save_callback_can_be_passed()
+    {
+        $holiday = new SampleHoliday();
+        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+            [
+                'transitions' => [
+                    'approve' => [
+                        'from' => [SampleHolidayStatus::REQUESTED],
+                        'to' => SampleHolidayStatus::APPROVED,
+                    ]
+                ],
+            ],)
+            ->callToSaveSubjectAfterTransition(fn(SampleHoliday $holiday) => $holiday->saved = true);
+
+        $this->assertFalse($holiday->saved);
+        $workflow->execute('approve');
+        $this->assertEquals(SampleHolidayStatus::APPROVED, $holiday->status->value());
+        $this->assertTrue($holiday->saved);
+    }
+
+    /** @test */
+    public function parameters_are_passed_to_the_save_callback()
+    {
+        $holiday = new SampleHoliday();
+        $workflow = Draft::forgeOnTheFly($holiday, 'status',
+            [
+                'transitions' => [
+                    'approve' => [
+                        'from' => [SampleHolidayStatus::REQUESTED],
+                        'to' => SampleHolidayStatus::APPROVED,
+                    ]
+                ],
+            ],)
+            ->callToSaveSubjectAfterTransition(function (SampleHoliday $holiday, array $parameters) {
+                $holiday->saved = true;
+                $holiday->misc = $parameters['data'];
+            });
+
+        $this->assertFalse($holiday->saved);
+        $workflow->execute('approve', ['data' => 'hey']);
+        $this->assertEquals(SampleHolidayStatus::APPROVED, $holiday->status->value());
+        $this->assertTrue($holiday->saved);
+        $this->assertEquals('hey', $holiday->misc);
+    }
 }
