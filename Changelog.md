@@ -1,7 +1,7 @@
 # Vanilo Workflow Changelog
 
-## Unreleased
-##### 2023-XX-YY
+## 1.2.0
+##### 2023-04-05
 
 - Added `titleOf` static method in order to be able to obtain the title of a transition
 
