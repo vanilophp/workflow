@@ -66,6 +66,16 @@ class Draft implements Workflow
         return isset(static::$graph['transitions'][$transition]);
     }
 
+    public static function titleOf(string $transition): string
+    {
+        $title = static::$graph['transitions'][$transition]['title'] ?? $transition;
+        if (is_callable($title)) {
+            $title = call_user_func($title, $transition);
+        }
+
+        return (string) $title;
+    }
+
     public static function for(object $subject): static
     {
         return (new static())->usingSubject($subject);

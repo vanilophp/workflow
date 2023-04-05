@@ -25,6 +25,8 @@ interface Workflow
 
     public static function hasTransition(string $transition): bool;
 
+    public static function titleOf(string $transition): string;
+
     public function getState(): BackedEnum|Enum;
 
     public function allowedTransitions(): array;
