@@ -1,7 +1,7 @@
 # Vanilo Workflow Changelog
 
-## Unreleased
-##### 2023-XX-YY
+## 1.1.0
+##### 2023-04-05
 
 - Added support for callback hook on transition for saving the subject
 - Added support for passing parameters to the transition
