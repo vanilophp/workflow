@@ -1,7 +1,7 @@
 # Vanilo Workflow Changelog
 
-## Unreleased
-##### 2026-XX-YY
+## 1.3.0
+##### 2026-04-23
 
 - Added PHP 8.4 & PHP 8.5 support
 
